@@ -7,7 +7,9 @@ from util import *
 from fsm import FiniteStateMachine
 
 
-
+"""
+	Main execution
+"""
 if __name__ == '__main__':
 
 	#Verify the parameters to execution
