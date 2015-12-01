@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from fsm import FiniteStateMachine
-
-
 #This script will handle the file operations
 
 
@@ -29,16 +26,10 @@ def read_fsm(txt):
 		#add to the list of transition
 		transitions.append(element)
 
-	#get the first element of the FSM and remove from the list of transitions
-	element = transitions.pop(0)
-
-	#populate the first element into FSM object
-
-
-	
+		
 	#populate the others elements
 	for element in transitions:
-		pass
+		print element
 
 
 
@@ -51,12 +42,28 @@ def read_fsm(txt):
 """
 def read_sequences(txt):
  	
- 	sequence = []
+ 	sequences = []
 
  	#read the file and populate sequence list
 
  	for line in txt:
- 		sequence = line.split()  #each line is a list with one sequence
- 		sequences.append(sequence) #append one sequence to the list of sequences
 
+ 		#Avoid empyt lines into the file
+ 		if line.strip():
+
+	 		sequence = list(line)  #convert a line with a sequence into a list. Ex:. xxxy = [x,x,x,y]
+
+	 		#There is a \n at the end of some lines. So remove the 
+	 		try:
+	 			sequence.remove('\n') #remove the [\n] element
+	 		except:
+	 			pass #if [\n] do not exists, just pass
+
+	 		#Add one sequence to the list of sequences
+	 		sequences.append(sequence) #append one sequence to the list of sequences
+
+	#Testing
+ 	for s in sequences:
+ 		print s
+ 		
  	return sequences  

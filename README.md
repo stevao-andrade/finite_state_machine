@@ -2,11 +2,17 @@
 
 A simple Python implementation of a final state machine.
 
+Will use an extra lib to handle with graphs operations:
+
+networkx: http://networkx.github.io/documentation/development/index.html
+installing: sudo apt-get install python-networkx
+
+
 This implementation have 3 main goals:
 
 - Read finite state machines from files
-- Read a list of sequences from files
-- Verify that the sequences (Test set) set is NP-complete
+- Read ste of sequences from files
+- Verify if that the sequences (Test set) set is N-complete
 
 This implementation is based in the following paper:
 

@@ -4,7 +4,6 @@
 import sys
 
 from util import *
-from fsm import FiniteStateMachine
 
 
 """
@@ -22,10 +21,6 @@ if __name__ == '__main__':
 	fsm_file = open(str(sys.argv[1]), 'r')
 	sequences_file = open(str(sys.argv[2]), 'r')
 
-	#Create a valid FSM obj
-	fsm = FiniteStateMachine()
-	fsm = util.read_fsm(fsm_file)
-
 	#Create a list with sequences
 	sequences = []
-	sequences = util.read_sequences(sequences_file)
+	sequences = read_sequences(sequences_file)
