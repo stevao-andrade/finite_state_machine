@@ -20,7 +20,7 @@ def build_distinction_graph(tree_size):
 	
 	"""
 		Args:
-			fsm_list = a list that contanis the finit state machine. Format [{ 'input': value, 'current_state': value, 'transition_state': value }]
+			tree_size = just the size of the test tree
 	"""
 	
 	#creat a graph object
@@ -35,8 +35,3 @@ def build_distinction_graph(tree_size):
 
 	#return the graph
 	return G
-
-
-"""
-
-"""

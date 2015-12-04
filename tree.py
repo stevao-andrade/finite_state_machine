@@ -65,6 +65,26 @@ def build_test_tree(sequences):
 			parent_id = node.identifier
 
 	#to vizualize a representation of the tree in terminal uncomment the line bellow
-	#tree.show()
+	tree.show()
 
 	return tree
+
+
+
+
+"""
+	This method is used to detect the edges between the nodes of the graph. The main goal is use the informations of the FSM to find T-distinguishable sequences and create edges between pairs of nodes
+"""
+def t_distinguish_sequences(paths, distinction_graph):
+
+	"""
+		Args:
+			paths = a dictionary that represents the FSM with it's states, inputs/outpus and destinition states
+			distinction_graph = a empty graph that will be filled
+	"""	
+
+	#go through each node and evaluate with all the other in order to find conections using Lema 1. 
+	for node, in_out in paths.iteritems():
+
+		print 'Analyzing node: ', node -1	
+		print 'Inputs / Outuputs: ', in_out

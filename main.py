@@ -53,6 +53,9 @@ if __name__ == '__main__':
 	#build distinction graph
 	distinction_graph = build_distinction_graph(tree_size)
 
+	#testing execution
+	t_distinguish_sequences(paths, distinction_graph)
+
 	#close the files at the end of execution
 	fsm_file.close()
 	sequences_file.close()
