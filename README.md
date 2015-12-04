@@ -2,10 +2,17 @@
 
 A simple Python implementation of a final state machine.
 
-Will use an extra lib to handle with graphs operations:
+Will use some extra libs to handle operations with graphs and trees operations:
+
+#Graphs
 
 networkx: http://networkx.github.io/documentation/development/index.html
 installing: sudo apt-get install python-networkx
+
+#Trees
+
+treelib: https://github.com/caesar0301/treelib
+instaling: sudo easy_install -U treelib
 
 
 This implementation have 3 main goals:
