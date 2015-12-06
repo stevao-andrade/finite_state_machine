@@ -14,7 +14,7 @@ def read_fsm(txt):
 	"""
 	
 	paths = {}
-
+	n_states = 0
 
 	#read the txt and create a list with each transition information
 	for line in txt:
@@ -53,9 +53,11 @@ def read_fsm(txt):
 
 			#create a entry in dictionary with the path..
 			else:
+
+				n_states = n_states + 1
 				paths[current_state] = path						
 
-	return paths
+	return n_states, paths
 
 
 

@@ -33,7 +33,7 @@ if __name__ == '__main__':
 
 	#create a dictionary to simulate the execution of a FSM
 	paths = {}
-	paths = read_fsm(fsm_file)
+	n_states, paths = read_fsm(fsm_file) #get the number of states and paths
 	
 
 	#Create a list with sequences
@@ -42,7 +42,6 @@ if __name__ == '__main__':
 
 	#Run the sequences in FSM in order to get the outputs of each input
 	output_sequences = run_fsm(sequences,paths, 1)
-
 
 	#build the test tree
 	test_tree = build_test_tree(output_sequences)
@@ -55,6 +54,23 @@ if __name__ == '__main__':
 
 	#use lema 1 to create the edges between the nodes of the graph	
 	distinction_graph = update_distinction_graph(test_tree, distinction_graph)
+
+	#find all cliques of N size in distinction graph
+	cliques = find_cliques(n_states, distinction_graph)
+
+	#a dictionary to store the label of each node of distinction graph/ test_tree.
+	labels = {}
+
+	clique = cliques[0]
+	
+	#label the elements of the clique
+	for i in range(len(clique)):
+
+		labels[clique[i]] = i
+
+	
+	graph_inference(labels, clique, distinction_graph)
+		
 
 
 

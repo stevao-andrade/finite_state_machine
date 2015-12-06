@@ -155,7 +155,7 @@ def compare_sequences(sequences1, sequences2):
 
 
 """
-	Take two nodes of the tree and evaluate if both are T-distinguishable
+	Take two nodes of the tree and evaluate if both are T-distinguishable. LEMMA 1
 """
 def t_distinguishable(n1, n2, test_tree):
 	
@@ -208,12 +208,9 @@ def update_distinction_graph(test_tree, distinction_graph):
 	#will look for the distinguishable sequence for each pair 
 	for pair in itertools.combinations(l, r=2):
 
-		print 'Iteração para o par: ', pair
-
 		#get the index of the nodes
 		n1 = pair[0]
 		n2 = pair[1]
-
 
 		#see if the two nodes are t distinguishables
 		if t_distinguishable(n1, n2, test_tree):
@@ -221,7 +218,7 @@ def update_distinction_graph(test_tree, distinction_graph):
 			#add a edge beetwen p1 and p2 in graph
 			distinction_graph.add_edge(n1, n2)
 
-
+	#updated graph
 	return distinction_graph
 
 
