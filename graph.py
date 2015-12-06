@@ -111,8 +111,8 @@ def graph_inference(labels, clique, distinction_graph):
 				#write the node with the same label of the element found
 				labels[node] = label
 
-	print 'Labels after inference: '
-	print labels
+
+	return labels
 
 
 

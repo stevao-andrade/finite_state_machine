@@ -61,17 +61,17 @@ if __name__ == '__main__':
 	#a dictionary to store the label of each node of distinction graph/ test_tree.
 	labels = {}
 
-	clique = cliques[0]
-	
+	#clique = cliques[0]
+	clique = [0, 6, 7, 12]
 	#label the elements of the clique
 	for i in range(len(clique)):
 
 		labels[clique[i]] = i
 
 	
-	graph_inference(labels, clique, distinction_graph)
+	labels = graph_inference(labels, clique, distinction_graph)
 		
-
+	common_suffix_verification(labels, test_tree)
 
 
 
