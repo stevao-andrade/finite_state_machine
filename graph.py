@@ -16,6 +16,8 @@ except:
 import matplotlib.pyplot as plt
 
 
+verbose = True
+
 
 """
 	Take the size of the tree and build a graph using networkx lib
@@ -84,6 +86,8 @@ def graph_inference(labels, clique, distinction_graph):
 			clique - a n-size clique of distinction_graph
 			distinction_graph - a networkx graph. Must apply lemma 1 first to obtain the edges between the nodes
 	"""
+
+	if verbose: print '\n########## LEMMA 2 ##########\n'
 	
 	#for each node on graph
 	for node in distinction_graph:
@@ -109,6 +113,10 @@ def graph_inference(labels, clique, distinction_graph):
 
 				#write the node with the same label of the element found
 				labels[node] = label
+
+				if verbose: print 'Element of the clique: ', clique
+				if verbose: print 'Node %d is connected to: ' % (node), list( set(set(clique)).intersection(set(edges)))
+				if verbose: print 'Node %d label is equals to node %d: ' % (node, element), label
 
 	return labels
 

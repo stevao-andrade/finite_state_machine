@@ -13,7 +13,7 @@ except:
 	sys.exit(-1)
 
 
-
+verbose = True
 
 
 """
@@ -65,7 +65,7 @@ def build_test_tree(sequences):
 			parent_id = node.identifier
 
 	#to vizualize a representation of the tree in terminal uncomment the line bellow
-	tree.show()
+	if verbose: tree.show()
 
 	return tree
 
@@ -142,10 +142,10 @@ def compare_sequences(sequences1, sequences2):
 			else:
 
 				#uncomment to check
-				#print '##########################'
-				#print sequence1
-				#print sequence2
-				#print '##########################'
+				if verbose: print 'Find a distinguishable sequence: '
+				if verbose: print 'Inputs: ', sequence1, sequence2
+				if verbose: print 'Diferent Outputs: ', output1, output2
+				
 
 				return True
 
@@ -166,23 +166,29 @@ def t_distinguishable(n1, n2, test_tree):
 			n2 = a index of a treelib Node element
 	"""
 
+	#size of the tree
 	tree_size = test_tree.size()
 
+	#childs for n1 and n2
 	childs_n1 = test_tree[n1].fpointer
 	childs_n2 = test_tree[n2].fpointer
 
 	#will generate all possibles distinguishable sequences for child_n1
 	for child_n1 in childs_n1:
 		
+		#generate all possible sequences for child_n1	
 		sequences_n1 = generate_all_sequences(child_n1, test_tree)
 
-		
+		#for each child n2
 		for child_n2 in childs_n2:
 			
+			#generate all possible sequences for child_n2
 			sequences_n2 = generate_all_sequences(child_n2, test_tree)
 
+			#compare the sequence of child_n1 and child_n2... if one of the sequences are equal but produces a diferent output then return true
 			result = compare_sequences(sequences_n1, sequences_n2)
 
+			#if there is a valid result
 			if result:
 
 				return True
@@ -202,6 +208,8 @@ def update_distinction_graph(test_tree, distinction_graph):
 			distinction_graph = a empty graph that will be filled
 	"""	
 
+	if verbose: print '\n########## LEMMA 1 ##########\n'
+
 	#create a list with test_tree.size() elements
 	l = [i for i in range(test_tree.size())] 
 
@@ -216,6 +224,8 @@ def update_distinction_graph(test_tree, distinction_graph):
 		#see if the two nodes are t distinguishables
 		if t_distinguishable(n1, n2, test_tree):
 
+			if verbose: print 'The nodes %d and %d are T-Distinguishable. Will create an edge beetwen then.' % (n1, n2)
+
 			#add a edge beetwen p1 and p2 in graph
 			distinction_graph.add_edge(n1, n2)
 
@@ -229,6 +239,9 @@ def update_distinction_graph(test_tree, distinction_graph):
 """
 def common_suffix_verification(labels, test_tree):
 
+	if verbose: print '\n########## LEMMA 3 ##########\n'
+
+	#an index with the labels that already have been discovered
 	common_suffix = {}
 	
 	#a list with the elements that already been labeled
@@ -239,9 +252,6 @@ def common_suffix_verification(labels, test_tree):
 
 	#update not_labeled just with the elements that aren't labeled yet
 	without_label = list(set(without_label) - set(with_label))
-
-	print 'Nodes with label: ', with_label
-	print 'Nodes without label: ', without_label
 
 
 	#build a index to identify the label of one element based in it's parent label and it's transference sequence
@@ -272,6 +282,7 @@ def common_suffix_verification(labels, test_tree):
 
 
 	#now will use the created index to discover information about the elements that don't have label yet
+	if verbose: print 'Index of labels {(parent, element_sequence) : element_label}: ', common_suffix
 
 	#parent of the element that wants to discovery the label
 	for parent in with_label:
@@ -302,6 +313,11 @@ def common_suffix_verification(labels, test_tree):
 
 					#if there is a match, update the label of the child
 					labels[child] = common_suffix[key]
+
+					if verbose: print 'Searching for the label of: ', child
+					if verbose: print 'Sequence of %d: ' % (child), child_sequence
+					if verbose: print 'Parent information (id, label): ', (parent, parent_label)
+					if verbose: print 'Find a match in the index of labels!'
 
 
 	return labels

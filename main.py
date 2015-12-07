@@ -4,7 +4,6 @@
 import sys
 
 
-
 #scripts used to handle operations with fsm, graphs, files and trees
 from fsm import *
 from graph import *
@@ -12,6 +11,7 @@ from util import *
 from tree import *
 
 
+verbose = True
 
 
 """
@@ -40,6 +40,10 @@ if __name__ == '__main__':
 	sequences = []
 	sequences = read_sequences(sequences_file)
 
+	#close the files. will note need they anymore
+	fsm_file.close()
+	sequences_file.close()
+
 	#Run the sequences in FSM in order to get the outputs of each input
 	output_sequences = run_fsm(sequences,paths, 1)
 
@@ -47,10 +51,10 @@ if __name__ == '__main__':
 	test_tree = build_test_tree(output_sequences)
 
 	#get the size of the tree
-	tree_size = test_tree.size()
+	number_elements = test_tree.size()
 
 	#build distinction graph
-	distinction_graph = build_distinction_graph(tree_size)
+	distinction_graph = build_distinction_graph(number_elements)
 
 	#use lema 1 to create the edges between the nodes of the graph	
 	distinction_graph = update_distinction_graph(test_tree, distinction_graph)
@@ -61,28 +65,40 @@ if __name__ == '__main__':
 	#some FSM dont have a cliques
 	if cliques:
 
-		#a dictionary to store the label of each node of distinction graph/ test_tree.
-		labels = {}
 
-		#clique = cliques[0]
-		clique = [0, 6, 7, 12]
+		for clique in cliques:
 
-		#label the elements of the clique
-		for i in range(len(clique)):
-			labels[clique[i]] = i
+			#result starts as true
+			result = True
 
-		
-		labels = graph_inference(labels, clique, distinction_graph)
-			
-		labels = common_suffix_verification(labels, test_tree)
+			#a dictionary to store the label of each node of distinction graph/ test_tree.
+			labels = {}
 
+			#clique = cliques[0]
+			clique = [0, 6, 7, 12]
+
+			#start labeling the elements of the clique
+			for i in range(len(clique)):
+				labels[clique[i]] = i
+
+
+			#try apply LEMMA 2 and LEMMA 3 while it's possibile
+			while result:
+
+				#apply LEMMA 2
+				labels = graph_inference(labels, clique, distinction_graph)
+				
+				#apply LEMMA 3
+				labels = common_suffix_verification(labels, test_tree)
+
+
+			#check theorema 1 or just verify if all nodes of the graph have label
+			if len(labels.keys) == number_elements:
+				print 'the set is n-complete!'
+				sys.exit(0)
 
 	#if the FSM dont have cliques
 	else:
 
-		print 'not complete'
-
-
-		#close the files at the end of execution
-		fsm_file.close()
-		sequences_file.close()
+		print 'the set is not n-complete.'
+		sys.exit(-1)
