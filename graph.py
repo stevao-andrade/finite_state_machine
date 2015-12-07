@@ -85,8 +85,6 @@ def graph_inference(labels, clique, distinction_graph):
 			distinction_graph - a networkx graph. Must apply lemma 1 first to obtain the edges between the nodes
 	"""
 	
-	print '################### LEMMA 2 ###################'
-
 	#for each node on graph
 	for node in distinction_graph:
 
