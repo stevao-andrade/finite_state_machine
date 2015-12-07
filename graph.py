@@ -97,9 +97,6 @@ def graph_inference(labels, clique, distinction_graph):
 
 			#get the edges that are connected to the node
 			edges = distinction_graph.adj[node]
-
-			print 'Analysing node: ', node
-			print 'Edes of the node: ', edges
 			
 			#check if n-1 elements of the clique are conected to node
 			if len(set(clique) - set(edges)) == 1:
@@ -112,9 +109,6 @@ def graph_inference(labels, clique, distinction_graph):
 
 				#write the node with the same label of the element found
 				labels[node] = label
-
-				print 'Node: ', node
-				print 'Label: ', label
 
 	return labels
 

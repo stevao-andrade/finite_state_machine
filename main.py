@@ -58,23 +58,31 @@ if __name__ == '__main__':
 	#find all cliques of N size in distinction graph
 	cliques = find_cliques(n_states, distinction_graph)
 
-	#a dictionary to store the label of each node of distinction graph/ test_tree.
-	labels = {}
+	#some FSM dont have a cliques
+	if cliques:
 
-	#clique = cliques[0]
-	clique = [0, 6, 7, 12]
+		#a dictionary to store the label of each node of distinction graph/ test_tree.
+		labels = {}
 
-	#label the elements of the clique
-	for i in range(len(clique)):
-		labels[clique[i]] = i
+		#clique = cliques[0]
+		clique = [0, 6, 7, 12]
 
-	
-	labels = graph_inference(labels, clique, distinction_graph)
+		#label the elements of the clique
+		for i in range(len(clique)):
+			labels[clique[i]] = i
+
 		
-	common_suffix_verification(labels, test_tree)
+		labels = graph_inference(labels, clique, distinction_graph)
+			
+		labels = common_suffix_verification(labels, test_tree)
 
 
+	#if the FSM dont have cliques
+	else:
 
-	#close the files at the end of execution
-	fsm_file.close()
-	sequences_file.close()
+		print 'not complete'
+
+
+		#close the files at the end of execution
+		fsm_file.close()
+		sequences_file.close()

@@ -104,51 +104,6 @@ def generate_all_sequences(node, test_tree):
 
 
 
-"""
-	Generate all possibles distinguishable sequences for a node in the tree
-"""
-def generate_all_sequences_w_output(node, test_tree):
-
-	"""
-		Args:
-			node = a index of a treelib Node element 
-			test_tree = the test_tree
-	"""
-
-	#input/output
-	in_out = []	
-
-	#one sequence
-	sequence = []
-
-	#all sequences
-	sequences = []
-	
-	#define a subtree of test_tree starting in node
-	subtree = test_tree.subtree(node)
-	
-	#(iterator don't work) workaround to see every node in subtree
-	for i in range(test_tree.size()):
-		
-		#workaround
-		if i in subtree:
-
-			#destination node
-			node = subtree[i].identifier
-
-			#input/output
-			in_out = [subtree[i].tag]
-
- 			#generate the sequence
-			sequence = sequence + in_out
- 
- 			#add to the list of possibles sequences
-			sequences.append([sequence, node])
-			sequences.append(in_out)
-	
-	return sequences
-
-
 
 
 """
@@ -274,58 +229,79 @@ def update_distinction_graph(test_tree, distinction_graph):
 """
 def common_suffix_verification(labels, test_tree):
 
-	print '################### LEMMA 3 ###################'
+	common_suffix = {}
 	
 	#a list with the elements that already been labeled
-	labeled = labels.keys()
+	with_label = labels.keys()
 
 	#generate a list to represent all elements of the graph
-	not_labeled = [i for i in range(test_tree.size())]
+	without_label = [i for i in range(test_tree.size())]
 
 	#update not_labeled just with the elements that aren't labeled yet
-	not_labeled = list(set(not_labeled) - set(labeled))
+	without_label = list(set(without_label) - set(with_label))
 
-	print 'With label: ', labeled
-	print 'Without label: ', not_labeled
+	print 'Nodes with label: ', with_label
+	print 'Nodes without label: ', without_label
 
-	#will check every not labeled element
-	for element in not_labeled:
 
-		print 'Analysing element: ', element
+	#build a index to identify the label of one element based in it's parent label and it's transference sequence
+	for element in with_label:
 
-		#generate all possible sequences for that element
-		sequences1 = generate_all_sequences_w_output(element, test_tree)
+		#get parent
+		parent = test_tree[element].bpointer
 
-		#get the first sequence for element		
-		sequence1 = sequences1[0]
-		destination_node1 = sequence1.pop(1) #get destination node of element and remove from sequence1
+		#if the parent have label to..
+		if parent in labels.keys():
 
-		#will check if there is label in before_node1
-		before_node1 = destination_node1 - 1
+			#get all sequences for parent and for the element
+			element_sequences = generate_all_sequences(element, test_tree)
+			parent_sequences  = generate_all_sequences(parent, test_tree) 
 
-		print 'Using this sequence: ', sequence1
+			#will look just for the first sequence of element
+			element_sequence = element_sequences[0].pop(0)
+			parent_sequence  = parent_sequences[0].pop(0)
 
-		#for each element that already been confirmed
-		for element_labeled in labeled:
+			#labels
+			element_label = labels[element]
+			parent_label  = labels[parent] 
 
-			print 'Will compare with labeled element: ', element_labeled
-
-			#generate all possible sequences for that element
-			sequences2 = generate_all_sequences_w_output(element_labeled, test_tree)
-
-			#now try find a commum sufix beetween 'element' and 'element_labeled' in order to find the label of the 'element'
+			#build a index with the information already discovered
+			key = (parent_label, element_sequence)  #when i'm on label and aply sequence i arrive on element_label
 			
-			#get the first sequence for element_labeled			
-			sequence2 = sequences2[0]
-			destination_node2 = sequence2.pop(1) #get destination node of element_labeled and remove from sequence2
+			common_suffix[key] = element_label
 
-			#will check if there is label in before_node2
-			before_node2 = destination_node2 - 1
 
-			print 'Comparing with this sequence: ', sequence2
+	#now will use the created index to discover information about the elements that don't have label yet
 
-			#if the sequences are equals, label of element is the same label of element_labeled
-			if (sequence1 == sequence2) and (before_node1 in labels.keys() and (before_node2 in labels.keys())):
-				print 'Label of %d: ' % (element), labels[destination_node2]
+	#parent of the element that wants to discovery the label
+	for parent in with_label:
 
-				break
+		#get the childs.. candidate to be labeled
+		childs = test_tree[parent].fpointer
+
+		#for each child
+		for child in childs:
+
+			#wants to discovery child label
+			if child in without_label:
+
+				#parent label
+				parent_label = labels[parent]
+
+				#get the sequences of child
+				child_sequences = generate_all_sequences(child, test_tree)
+				
+				#get just the first one
+				child_sequence = child_sequences[0].pop() 
+
+				#build the key to findout the label of child
+				key = (parent_label, child_sequence)
+
+				#lookup in the index in order to find a match
+				if key in common_suffix.keys():
+
+					#if there is a match, update the label of the child
+					labels[child] = common_suffix[key]
+
+
+	return labels
