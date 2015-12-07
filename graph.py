@@ -16,7 +16,7 @@ except:
 import matplotlib.pyplot as plt
 
 
-verbose = True
+verbose = False
 
 
 """

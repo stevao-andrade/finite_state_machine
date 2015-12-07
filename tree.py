@@ -13,7 +13,7 @@ except:
 	sys.exit(-1)
 
 
-verbose = True
+verbose = False
 
 
 """

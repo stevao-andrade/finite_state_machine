@@ -11,7 +11,7 @@ from util import *
 from tree import *
 
 
-verbose = True
+verbose = False
 
 
 """
@@ -75,7 +75,7 @@ if __name__ == '__main__':
 			labels = {}
 
 			#clique = cliques[0]
-			clique = [0, 6, 7, 12]
+			#clique = [0, 6, 7, 12]
 
 			#start labeling the elements of the clique
 			for i in range(len(clique)):
@@ -93,15 +93,13 @@ if __name__ == '__main__':
 
 				#update result value.. 
 				result = lemma2 or lemma3
-
-				print 'Partial Labels: ', labels
 			
 			#check theorema 1 or just verify if all nodes of the graph have label
 			if len(labels.keys()) == number_elements:
+
 				print 'the set is n-complete!'
 				sys.exit(0)
 
-			print 'acabou'
 
 	#if the FSM dont have cliques
 	else:
