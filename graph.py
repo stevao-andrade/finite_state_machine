@@ -89,36 +89,82 @@ def graph_inference(labels, clique, distinction_graph):
 
 	if verbose: print '\n########## LEMMA 2 ##########\n'
 	
+	#result represents if there is some alteration in labels.. it's begins as False
+	result = False
+
+	#number of nodes
+	number_nodes = nx.number_of_nodes(distinction_graph)
+
+	#a list with the elements that already been labeled
+	with_label = labels.keys()
+
+
+	if verbose: print 'Nodes with label: ', with_label
+
+
+	#generate a list to represent all elements of the graph
+	without_label = [i for i in range(number_nodes)]
+
+	#update not_labeled just with the elements that aren't labeled yet
+	without_label = list(set(without_label) - set(with_label))
+
+
+	if verbose: print 'Nodes without label: ', without_label		
+
+
 	#for each node on graph
 	for node in distinction_graph:
 
-		#if the node is on clique ignore it
-		if node in clique:
+		#if node dont have a label..
+		if node not in labels.keys():
 
-			continue
 
-		else:
-
+			#create a list with all possible labels
+			possible_labels = []
+			for i in range(len(clique)):
+				possible_labels.append(i)
+		
+		
 			#get the edges that are connected to the node
-			edges = distinction_graph.adj[node]
+			edges = list(distinction_graph.adj[node])
 			
-			#check if n-1 elements of the clique are conected to node
-			if len(set(clique) - set(edges)) == 1:
+			#for each edged_node conected to the node			
+			for e in edges:
 
-				#get the element of the clique that arent connected to the node
-				element = (set(clique) - set(edges)).pop()
+				#look if the edge_node already have a label
+				label_edge = None
+
+				try:
+					label_edge = labels[e]
+				except:
+					pass
+
+				#if it have a label
+				if label_edge in possible_labels:
+
+					#remove it's label from the possible labes for node
+					possible_labels.remove(label_edge)
+
+			#if the number of possible labels for node is 1, then you found the label of node!
+			if len(possible_labels) == 1:			
+
+				#get the element labeled that aren't connected to the node
+				element = possible_labels.pop()
 
 				#get the label of the element
-				label = labels[element]
+				label = element
 
 				#write the node with the same label of the element found
 				labels[node] = label
 
-				if verbose: print 'Element of the clique: ', clique
-				if verbose: print 'Node %d is connected to: ' % (node), list( set(set(clique)).intersection(set(edges)))
+				#update result
+				result = True
+
+				if verbose: print 'Node %d is connected to: ' % (node), list( set(set(labels.keys())).intersection(set(edges)))
 				if verbose: print 'Node %d label is equals to node %d: ' % (node, element), label
 
-	return labels
+	#returning result will show if there are updates in labels 
+	return result,labels
 
 
 

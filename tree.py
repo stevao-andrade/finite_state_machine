@@ -233,26 +233,13 @@ def update_distinction_graph(test_tree, distinction_graph):
 
 
 
-
 """
-	This method use the test tree to try discover new labels of the elements that aren't labeled yet. LEMMA 3 
+	This method is used to build an index with sequences of common suffix
 """
-def common_suffix_verification(labels, test_tree):
-
-	if verbose: print '\n########## LEMMA 3 ##########\n'
+def build_common_suffix_index(labels, test_tree, with_label):
 
 	#an index with the labels that already have been discovered
 	common_suffix = {}
-	
-	#a list with the elements that already been labeled
-	with_label = labels.keys()
-
-	#generate a list to represent all elements of the graph
-	without_label = [i for i in range(test_tree.size())]
-
-	#update not_labeled just with the elements that aren't labeled yet
-	without_label = list(set(without_label) - set(with_label))
-
 
 	#build a index to identify the label of one element based in it's parent label and it's transference sequence
 	for element in with_label:
@@ -280,12 +267,47 @@ def common_suffix_verification(labels, test_tree):
 			
 			common_suffix[key] = element_label
 
+	return common_suffix
 
-	#now will use the created index to discover information about the elements that don't have label yet
-	if verbose: print 'Index of labels {(parent, element_sequence) : element_label}: ', common_suffix
 
+
+
+"""
+	This method use the test tree to try discover new labels of the elements that aren't labeled yet. LEMMA 3 
+"""
+def common_suffix_verification(labels, test_tree):
+
+	if verbose: print '\n########## LEMMA 3 ##########\n'
+
+	#result represents if there is some alteration in labels.. it's begins as False
+	result = False
+
+	#an index with the labels that already have been discovered
+	common_suffix = {}
+
+	#a list with the elements that already been labeled
+	with_label = labels.keys()
+
+	if verbose: print 'Nodes with label: ', with_label
+	
 	#parent of the element that wants to discovery the label
 	for parent in with_label:
+
+		#update with_label value
+		with_label = labels.keys()
+
+		#generate a list to represent all elements of the graph
+		without_label = [i for i in range(test_tree.size())]
+
+		#update not_labeled just with the elements that aren't labeled yet
+		without_label = list(set(without_label) - set(with_label))
+
+		if verbose: print 'Nodes without label: ', without_label
+
+		#encapsule inside a method to update the common_suffix for each iteration
+		common_suffix = build_common_suffix_index(labels, test_tree, with_label)
+
+		#now will use the created index to discover information about the elements that don't have label yet
 
 		#get the childs.. candidate to be labeled
 		childs = test_tree[parent].fpointer
@@ -311,13 +333,19 @@ def common_suffix_verification(labels, test_tree):
 				#lookup in the index in order to find a match
 				if key in common_suffix.keys():
 
+					if verbose: print 'Index of labels {(parent, element_sequence) : element_label}: ', common_suffix
+
 					#if there is a match, update the label of the child
 					labels[child] = common_suffix[key]
+
+					#update result
+					result = True
 
 					if verbose: print 'Searching for the label of: ', child
 					if verbose: print 'Sequence of %d: ' % (child), child_sequence
 					if verbose: print 'Parent information (id, label): ', (parent, parent_label)
 					if verbose: print 'Find a match in the index of labels!'
+					if verbose: print 'Element %d label: ' % (child), common_suffix[key]
 
-
-	return labels
+	#returning result will show if there are updates in labels
+	return result, labels

@@ -65,7 +65,7 @@ if __name__ == '__main__':
 	#some FSM dont have a cliques
 	if cliques:
 
-
+		#
 		for clique in cliques:
 
 			#result starts as true
@@ -85,17 +85,23 @@ if __name__ == '__main__':
 			#try apply LEMMA 2 and LEMMA 3 while it's possibile
 			while result:
 
-				#apply LEMMA 2
-				labels = graph_inference(labels, clique, distinction_graph)
+				#apply LEMMA 2.. if there are updates in labels, then lemma2 is True
+				lemma2, labels = graph_inference(labels, clique, distinction_graph)
 				
-				#apply LEMMA 3
-				labels = common_suffix_verification(labels, test_tree)
+				#apply LEMMA 3.. if there are updates in labels, then lemma3 is True
+				lemma3, labels = common_suffix_verification(labels, test_tree)
 
+				#update result value.. 
+				result = lemma2 or lemma3
 
+				print 'Partial Labels: ', labels
+			
 			#check theorema 1 or just verify if all nodes of the graph have label
-			if len(labels.keys) == number_elements:
+			if len(labels.keys()) == number_elements:
 				print 'the set is n-complete!'
 				sys.exit(0)
+
+			print 'acabou'
 
 	#if the FSM dont have cliques
 	else:
