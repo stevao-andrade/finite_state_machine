@@ -78,24 +78,22 @@ def read_sequences(txt):
 
 	#read the file and populate sequences into a list
 
+	#for each line in file
 	for line in txt:
 
-		#Avoid empyt lines into the file
-		if line.strip():
+		#convert a line with a sequence into a list. Ex:. xxxy = [x,x,x,y]
+		sequence = list(line)  
 
-			sequence = list(line)  #convert a line with a sequence into a list. Ex:. xxxy = [x,x,x,y]
-
-			#There is a \n at the end of some lines. So remove the 
-			try:
-				
-				sequence.remove('\n') #remove the [\n] element
+		#There is a \n at the end of some lines. So remove the 
+		try:
 			
-			except:
+			sequence.remove('\n') #remove the [\n] element
+		
+		except:
 
-				pass #if [\n] do not exists, just pass
+			pass #if [\n] do not exists, just pass
 
-			#Add one sequence to the list of sequences
-			sequences.append(sequence) #append one sequence to the list of sequences
-
+		#Add one sequence to the list of sequences
+		sequences.append(sequence) #append one sequence to the list of sequences
 
 	return sequences  
