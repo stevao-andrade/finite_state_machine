@@ -63,9 +63,9 @@ if __name__ == '__main__':
 
 	#clique = cliques[0]
 	clique = [0, 6, 7, 12]
+
 	#label the elements of the clique
 	for i in range(len(clique)):
-
 		labels[clique[i]] = i
 
 	

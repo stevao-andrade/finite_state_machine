@@ -82,10 +82,7 @@ def generate_all_sequences(node, test_tree):
 			test_tree = the test_tree
 	"""
 
-	#one sequence
-	sequence = []	
-
-	#a list of sequences with destination node
+	in_out = []		
 	sequences = []
 	
 	#define a subtree of test_tree starting in node
@@ -97,17 +94,11 @@ def generate_all_sequences(node, test_tree):
 		#workaround
 		if i in subtree:
 
-			#destination node
-			node = subtree[i].identifier
-
-			#input/output
-			in_out = [subtree[i].tag]
-
 			#generate the sequence
-			sequence = sequence + in_out
+			in_out = in_out + [subtree[i].tag]
 
 			#add to the list of possibles sequences
-			sequences.append([sequence, node])
+			sequences.append(in_out)
 	
 	return sequences
 
@@ -127,47 +118,35 @@ def compare_sequences(sequences1, sequences2):
 
 	for sequence1, sequence2 in zip(sequences1, sequences2):
 
-
 		for in_out1, in_out2 in zip(sequence1, sequence2):
 
-			#zip will generate tuples with the destination nodes to. Avoid then checking if in_out are instances of list
-			if not (isinstance(in_out1, list) and isinstance(in_out2, list)):
+			input1  = in_out1.split('/')[0] #get just input
+			output1 = in_out1.split('/')[1] #get just output
 
+			input2  = in_out2.split('/')[0] #get just input
+			output2 = in_out2.split('/')[1] #get just output
+
+			#compare inputs
+			if input1 != input2:
+
+				#go check next sequence1
+				break
+
+			if (input1 == input2) and (output1 == output2):
+
+				#go check next input/output of sequence1
 				continue
 
+			#same input, diferent output (distinguishable)
 			else:
 
-				#discart the information about destination state
-				in_out1 = in_out1[0] 
-				in_out2 = in_out2[0]
+				#uncomment to check
+				#print '##########################'
+				#print sequence1
+				#print sequence2
+				#print '##########################'
 
-				input1  = in_out1.split('/')[0] #get just input
-				output1 = in_out1.split('/')[1] #get just output
-
-				input2  = in_out2.split('/')[0] #get just input
-				output2 = in_out2.split('/')[1] #get just output
-
-				#compare inputs
-				if input1 != input2:
-
-					#go check next sequence1
-					break
-
-				if (input1 == input2) and (output1 == output2):
-
-					#go check next input/output of sequence1
-					continue
-
-				#same input, diferent output (distinguishable)
-				else:
-
-					#uncomment to check
-					#print '##########################'
-					#print sequence1
-					#print sequence2
-					#print '##########################'
-
-					return True
+				return True
 
 	#the sequences are indistinguishable
 	return False
@@ -176,7 +155,7 @@ def compare_sequences(sequences1, sequences2):
 
 
 """
-	Take two nodes of the tree and evaluate if both are T-distinguishable. LEMMA 1
+	Take two nodes of the tree and evaluate if both are T-distinguishable
 """
 def t_distinguishable(n1, n2, test_tree):
 	
@@ -196,13 +175,11 @@ def t_distinguishable(n1, n2, test_tree):
 		
 		sequences_n1 = generate_all_sequences(child_n1, test_tree)
 
-
-		#will generate all possibles distinguishable sequences for child_n2
+		
 		for child_n2 in childs_n2:
 			
 			sequences_n2 = generate_all_sequences(child_n2, test_tree)
 
-			#compare all possible sequences to child_n1 and child_n2. If there is a distinguishable sequence, return True
 			result = compare_sequences(sequences_n1, sequences_n2)
 
 			if result:
@@ -210,8 +187,6 @@ def t_distinguishable(n1, n2, test_tree):
 				return True
 
 	return False
-
-
 
 
 
@@ -243,37 +218,4 @@ def update_distinction_graph(test_tree, distinction_graph):
 			#add a edge beetwen p1 and p2 in graph
 			distinction_graph.add_edge(n1, n2)
 
-	#updated graph
 	return distinction_graph
-
-
-		
-
-"""
-	This method use the test tree to try discover new labels of the elements that aren't labeled yet. LEMMA 3 
-"""
-def common_suffix_verification(labels, test_tree):
-	
-	#a list with the elements that already been labeled
-	labeled = labels.keys()
-
-	#generate a list to represent all elements of the graph
-	not_labeled = [i for i in range(test_tree.size())]
-
-	#update not_labeled just with the elements that aren't labeled yet
-	not_labeled = list(set(not_labeled) - set(labeled))
-
-	#will check every not labeled element
-	for element in not_labeled:
-
-		#generate all possible sequences for that element
-		sequences1 = generate_all_sequences(element, test_tree)
-		
-		#for each element that already been confirmed
-		for element_labeled in labeled:
-
-			#generate all possible sequences for that element
-			sequences2 = generate_all_sequences(element_labeled, test_tree)
-
-			#now try find a commum sufix beetween 'element' and 'element_labeled' in order to find the label of the 'element'
-			
