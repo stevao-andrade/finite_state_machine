@@ -21,7 +21,7 @@ This implementation have 3 main goals:
 
 - Read finite state machines from a file
 - Read a set of sequences from a file
-- Verify if that the sequences (Test set) set is N-complete
+- Verify if an given sequences (Test set) set is N-complete
 
 #Usage
 
